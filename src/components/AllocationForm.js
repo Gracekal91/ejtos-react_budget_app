@@ -3,7 +3,7 @@ import React, { useContext, useState } from 'react';
 import { AppContext } from '../context/AppContext';
 
 const AllocationForm = (props) => {
-    const { dispatch,remaining  } = useContext(AppContext);
+    const { dispatch,remaining, currency  } = useContext(AppContext);
 
     const [name, setName] = useState('');
     const [cost, setCost] = useState('');
@@ -60,6 +60,8 @@ const AllocationForm = (props) => {
                         <option value="Reduce" name="Reduce">Reduce</option>
                     </select>
 
+                    <div className="input-group-prepend" style={{ marginLeft: '2rem' }}>
+                    {currency}
                     <input
                         required='required'
                         type='number'
@@ -73,6 +75,7 @@ const AllocationForm = (props) => {
                         Save
                     </button>
                 </div>
+            </div>
             </div>
 
         </div>

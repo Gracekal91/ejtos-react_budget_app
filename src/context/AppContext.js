@@ -30,6 +30,24 @@ export const AppReducer = (state, action) => {
                     ...state
                 }
             }
+        case 'DECREASE_EXPENSE':
+            const updatedExpenses = state.expenses.map(expense => {
+                if (expense.name === action.payload.name) {
+                    const newCost = expense.cost - action.payload.cost;
+                    if (newCost < 0) {
+                        alert("Cannot decrease the allocation! Out of funds");
+                        return expense;
+                    } else {
+                        return { ...expense, cost: newCost };
+                    }
+                }
+                return expense;
+            });
+
+            return {
+                ...state,
+                expenses: updatedExpenses,
+            };
             case 'RED_EXPENSE':
                 const red_expenses = state.expenses.map((currentExp)=> {
                     if (currentExp.name === action.payload.name && currentExp.cost - action.payload.cost >= 0) {
@@ -58,11 +76,13 @@ export const AppReducer = (state, action) => {
                 budget
             };
         case 'SET_BUDGET':
-            action.type = "DONE";
-            state.budget = action.payload;
-
+            if (action.payload < state.expenses.reduce((total, item) => total + item.cost, 0)) {
+                alert("You cannot reduce the budget value lower than spending");
+                return state;
+            }
             return {
                 ...state,
+                budget: action.payload,
             };
         case 'CHG_CURRENCY':
             action.type = "DONE";
@@ -78,7 +98,7 @@ export const AppReducer = (state, action) => {
 
 // 1. Sets the initial state when the app loads
 const initialState = {
-    budget: 2000,
+    budget: 1000,
     expenses: [
         { id: "Marketing", name: 'Marketing', cost: 50 },
         { id: "Finance", name: 'Finance', cost: 300 },
